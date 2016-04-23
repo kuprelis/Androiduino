@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Androiduino</string>
+    <string name="connected">Prisijungta</string>
+    <string name="connection_fail">Prisijungti nepavyko</string>
+    <string name="no_devices">Nėra suporuotų įrenginių</string>
+</resources>

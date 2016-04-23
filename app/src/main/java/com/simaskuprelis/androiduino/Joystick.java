@@ -1,9 +1,12 @@
 package com.simaskuprelis.androiduino;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -17,7 +20,9 @@ public class Joystick extends View {
     private PointF mFinger;
     private PointF mMiddle;
     private Paint mPtrPaint;
-    private int mPtrRadius = 75;
+    private Paint mOutlinePaint;
+    private Rect mOutline;
+    private int mPtrRadius;
 
     public Joystick(Context context) {
         this(context, null);
@@ -26,7 +31,16 @@ public class Joystick extends View {
     public Joystick(Context context, AttributeSet attrs) {
         super(context, attrs);
         mPtrPaint = new Paint();
+        mOutlinePaint = new Paint();
         mPtrPaint.setColor(getContext().getResources().getColor(R.color.colorAccent));
+        mOutlinePaint.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+        mOutlinePaint.setStyle(Paint.Style.STROKE);
+        mOutlinePaint.setStrokeWidth(4);
+        if (attrs != null) {
+            TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.Joystick, 0, 0);
+            mPtrRadius = (a.getDimensionPixelSize(R.styleable.Joystick_dotRadius, 0));
+            a.recycle();
+        }
     }
 
     @Override
@@ -48,6 +62,7 @@ public class Joystick extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        mOutline = new Rect(0, 0, w, h);
         mMiddle = new PointF(w / 2, h / 2);
         mFinger = mMiddle;
     }
@@ -55,6 +70,7 @@ public class Joystick extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawCircle(mFinger.x, mFinger.y, mPtrRadius, mPtrPaint);
+        canvas.drawRect(mOutline, mOutlinePaint);
     }
 
     private void setPos(float x, float y) {
